@@ -1,25 +1,20 @@
 import { useEffect, useState } from "react";
-import {
-	GitHubApiGitHubRepositoryRepository
-} from "../../infrastructure/GitHubApiGitHubRepositoryRepository";
+import { GitHubRepository } from "../../domain/GitHubRepository";
 import { config } from "../../devdash_config";
-import { GitHubApiResponses } from "../../infrastructure/GitHubApiResponse";
-import Lock from "/src/assets/svg/lock.svg?react";
-import Unlock from "/src/assets/svg/unlock.svg?react";
-import Check from "/src/assets/svg/check.svg?react";
-import Error from "/src/assets/svg/error.svg?react";
-import Brand from "/src/assets/svg/brand.svg?react";
-import Star from "/src/assets/svg/star.svg?react";
-import Watchers from "/src/assets/svg/watchers.svg?react";
-import Forks from "/src/assets/svg/repo-forked.svg?react";
-import IssueOpened from "/src/assets/svg/issue-opened.svg?react";
-import PullRequests from "/src/assets/svg/git-pull-request.svg?react";
+import { ReactComponent as Lock } from "/src/assets/svg/lock.svg";
+import { ReactComponent as Unlock } from "/src/assets/svg/unlock.svg";
+import { ReactComponent as Check } from "/src/assets/svg/check.svg";
+import { ReactComponent as Error } from "/src/assets/svg/error.svg";
+import { ReactComponent as Brand } from "/src/assets/svg/brand.svg";
+import { ReactComponent as Star } from "/src/assets/svg/star.svg";
+import { ReactComponent as Watchers } from "/src/assets/svg/watchers.svg";
+import { ReactComponent as Forks } from "/src/assets/svg/repo-forked.svg";
+import { ReactComponent as IssueOpened } from "/src/assets/svg/issue-opened.svg";
+import { ReactComponent as PullRequests } from "/src/assets/svg/git-pull-request.svg";
 import styles from "./Dashboard.module.scss";
+import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
 
-let isInit = false;
-
-const isoToReadableDate = (lastUpdate: string): string => {
-	const lastUpdateDate = new Date(lastUpdate);
+const isoToReadableDate = (lastUpdateDate: Date): string => {
 	const currentDate = new Date();
 	const diffDays = Math.round((currentDate.getTime() - lastUpdateDate.getTime()) / (1000 * 3600 * 24));
 
@@ -34,21 +29,15 @@ const isoToReadableDate = (lastUpdate: string): string => {
 	return `${diffDays} days ago`;
 }
 
-const repository = new GitHubApiGitHubRepositoryRepository(config.github_access_token);
-
-export function Dashboard() {
-	const [gitHubApiResponse, setGitHubApiResponse] = useState<GitHubApiResponses[]>([]);
+export function Dashboard({ repository }: { repository: GitHubRepositoryRepository }) {
+	const [gitHubApiResponse, setGitHubApiResponse] = useState<GitHubRepository[]>([]);
 
 	useEffect(() => {
-		if (!isInit) {
-			repository.search(config.widgets.map((widget) => widget.repository_url)).then((response) => {
+		repository
+			.search(config.widgets.map((widget) => widget.repository_url))
+			.then((response) => {
 				setGitHubApiResponse(response);
 			});
-		}
-
-		return () => {
-			isInit = true;
-		};
 	}, []);
 
 	return (
@@ -59,57 +48,64 @@ export function Dashboard() {
 					<h1 className={styles.app__brand}>DevDash_</h1>
 				</section>
 			</header>
-			<section className={styles.container}>
-				{gitHubApiResponse.map((widget) => (
-					<article className={styles.widget} key={widget.repositoryData.id}>
-						<header className={styles.widget__header}>
-							<a
-								className={styles.widget__title}
-								href={widget.repositoryData.html_url}
-								target="_blank"
-								title={`${widget.repositoryData.organization.login}/${widget.repositoryData.name}`}
-								rel="noreferrer"
-							>
-								{widget.repositoryData.organization.login}/{widget.repositoryData.name}
-							</a>
-							{widget.repositoryData.private ? <Lock /> : <Unlock />}
-						</header>
-						<div className={styles.widget__body}>
-							<div className={styles.widget__status}>
-								<p>Last update {isoToReadableDate(widget.repositoryData.updated_at)}</p>
-								{widget.ciStatus.workflow_runs.length > 0 && (
-									<div>
-										{widget.ciStatus.workflow_runs[0].status === 'completed' ? <Check /> : <Error />}
+			{gitHubApiResponse.length === 0 ? (
+					<div className={styles.empty}>
+						<span>No hay widgets configurados.</span>
+					</div>
+				) : (
+					<section className={styles.container}>
+					{gitHubApiResponse.map((widget) => (
+						<article className={styles.widget} key={widget.id.name}>
+							<header className={styles.widget__header}>
+								<h2 className={styles.widget__title}>
+									<a
+										href={widget.url}
+										target="_blank"
+										title={`${widget.id.organization}/${widget.id.name}`}
+										rel="noreferrer"
+									>
+										{widget.id.organization}/{widget.id.name}
+									</a>
+								</h2>
+								{widget.private ? <Lock /> : <Unlock />}
+							</header>
+							<div className={styles.widget__body}>
+								<div className={styles.widget__status}>
+									<p>Last update {isoToReadableDate(widget.updatedAt)}</p>
+									{widget.hasWorkflows && (
+										<div>
+											{widget.isLastWorkflowSuccess ? <Check /> : <Error />}
+										</div>
+									)}
+								</div>
+								<p className={styles.widget__description}>{widget.description}</p>
+								<footer className={styles.widget__footer}>
+									<div className={styles.widget__stat}>
+										<Star />
+										<span>{widget.stars}</span>
 									</div>
-								)}
+									<div className={styles.widget__stat}>
+										<Watchers />
+										<span>{widget.watchers}</span>
+									</div>
+									<div className={styles.widget__stat}>
+										<Forks />
+										<span>{widget.forks}</span>
+									</div>
+									<div className={styles.widget__stat}>
+										<IssueOpened />
+										<span>{widget.issues}</span>
+									</div>
+									<div className={styles.widget__stat}>
+										<PullRequests />
+										<span>{widget.pullRequests}</span>
+									</div>
+								</footer>
 							</div>
-							<p className={styles.widget__description}>{widget.repositoryData.description}</p>
-							<footer className={styles.widget__footer}>
-								<div className={styles.widget__stat}>
-									<Star />
-									<span>{widget.repositoryData.stargazers_count}</span>
-								</div>
-								<div className={styles.widget__stat}>
-									<Watchers />
-									<span>{widget.repositoryData.watchers_count}</span>
-								</div>
-								<div className={styles.widget__stat}>
-									<Forks />
-									<span>{widget.repositoryData.forks_count}</span>
-								</div>
-								<div className={styles.widget__stat}>
-									<IssueOpened />
-									<span>{widget.repositoryData.open_issues_count}</span>
-								</div>
-								<div className={styles.widget__stat}>
-									<PullRequests />
-									<span>{widget.pullRequests.length}</span>
-								</div>
-							</footer>
-						</div>
-					</article>
-				))}
-			</section>
+						</article>
+					))}
+				</section>
+			)}
 		</>
 	);
 }
