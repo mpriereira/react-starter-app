@@ -11,7 +11,7 @@ export class GitHubApiGitHubRepositoryRepository implements GitHubRepositoryRepo
 	private readonly endpoints = [
 		"https://api.github.com/repos/$organization/$name",
 		"https://api.github.com/repos/$organization/$name/pulls",
-		"https://api.github.com/repos/$organization/$name/actions/runs?page=1&per_page=1"
+		"https://api.github.com/repos/$organization/$name/actions/runs?page=1&per_page=10"
 	];
 
 	constructor(private readonly personalAccessToken: string) {}
