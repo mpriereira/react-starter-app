@@ -1,8 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { Dashboard } from "../src/sections/dashboard/Dashboard";
 import { GitHubRepositoryMother } from "./GitHubRepositoryMother";
 import { mock, MockProxy } from "jest-mock-extended";
 import { GitHubRepositoryRepository } from "../src/domain/GitHubRepositoryRepository";
+import { renderWithRouter } from "./renderWithRouter";
 
 const mockRepository: MockProxy<GitHubRepositoryRepository> = mock();
 
@@ -12,25 +13,20 @@ describe("Dashboard section", () => {
 
 		mockRepository.search.mockResolvedValue([gitHubRepository]);
 
-		render(<Dashboard repository={mockRepository} />);
-
-		const title = await screen.findByRole("heading", {
-			name: new RegExp("DevDash_", "i"),
-		});
+		renderWithRouter(<Dashboard repository={mockRepository} />);
 
 		const firstWidgetTitle = `${gitHubRepository.id.organization}/${gitHubRepository.id.name}`;
 		const firstWidgetHeader = await screen.findByRole("heading", {
 			name: new RegExp(firstWidgetTitle, "i"),
 		});
 
-		expect(title).toBeInTheDocument();
 		expect(firstWidgetHeader).toBeInTheDocument();
 	});
 
 	test("show not results message when there are no widgets", async () => {
 		mockRepository.search.mockResolvedValue([]);
 
-		render(<Dashboard repository={mockRepository} />);
+		renderWithRouter(<Dashboard repository={mockRepository} />);
 
 		const noResults = await screen.findByText(new RegExp("No hay widgets configurados", "i"));
 
@@ -42,7 +38,7 @@ describe("Dashboard section", () => {
 
 		mockRepository.search.mockResolvedValue([gitHubRepository]);
 
-		render(<Dashboard repository={mockRepository} />);
+		renderWithRouter(<Dashboard repository={mockRepository} />);
 
 		const modificationDate = await screen.findByText(new RegExp("today", "i"));
 
