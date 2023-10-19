@@ -1,22 +1,28 @@
 import { useParams } from "react-router-dom";
 import { useGitHubRepository } from "./useGitHubRepository";
-import {
-	GitHubApiGitHubRepositoryRepository
-} from "../../infrastructure/GitHubApiGitHubRepositoryRepository";
-import { config } from "../../devdash_config";
 import { useMemo } from "react";
 import { ReactComponent as Lock } from "/src/assets/svg/lock.svg";
 import { ReactComponent as Unlock } from "/src/assets/svg/unlock.svg";
 import styles from "./GitHubRepositoryDetail.module.scss";
+import { useInViewport } from "../layout/useInViewport";
+import { PullRequests } from "./PullRequests";
+import {
+	GitHubRepositoryPullRequestRepository
+} from "../../domain/GitHubRepositoryPullRequestRepository";
+import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
 
-const repository = new GitHubApiGitHubRepositoryRepository(config.github_access_token);
+type GitHubRepositoryDetailParams = {
+	gitHubRepositoryRepository: GitHubRepositoryRepository;
+	gitHubRepositoryPullRequestRepository: GitHubRepositoryPullRequestRepository;
+}
 
-export function GitHubRepositoryDetail() {
+export function GitHubRepositoryDetail({ gitHubRepositoryRepository, gitHubRepositoryPullRequestRepository }: GitHubRepositoryDetailParams) {
 	const { organization, name } = useParams() as { organization: string; name: string };
 
 	const repositoryId = useMemo(() => ({ name, organization }), [name, organization]);
 
-	const { repositoryData } = useGitHubRepository(repository, repositoryId);
+	const { repositoryData } = useGitHubRepository(gitHubRepositoryRepository, repositoryId);
+	const { isInViewport, ref } = useInViewport();
 
 	if (!repositoryData) {
 		return <span>No existe el Repositorio</span>;
@@ -94,6 +100,15 @@ export function GitHubRepositoryDetail() {
 					</table>
 				</>
 			) : <p>There are no workflow runs</p>}
+
+			<section ref={ref}>
+				{isInViewport && (
+					<PullRequests
+						repository={gitHubRepositoryPullRequestRepository}
+						repositoryId={repositoryId}
+					/>
+				)}
+			</section>
 		</section>
 	);
 }
