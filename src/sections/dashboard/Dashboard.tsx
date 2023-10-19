@@ -3,15 +3,22 @@ import styles from "./Dashboard.module.scss";
 import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
 import { GitHubRepositoryWidget } from "./GitHubRepositoryWidget";
 import { useGitHubRepositories } from "./useGitHubRepositories";
+import { WidgetsSkeleton } from "./WidgetsSkeleton";
 
 const gitHubRepositoryUrls = config.widgets.map((widget) => widget.repository_url);
 
 export function Dashboard({ repository }: { repository: GitHubRepositoryRepository }) {
-	const { repositoryData } = useGitHubRepositories(repository, gitHubRepositoryUrls);
+	const { repositoryData, isLoading } = useGitHubRepositories(repository, gitHubRepositoryUrls);
 
 	return (
 		<>
-			{repositoryData.length === 0 ? (
+			{isLoading && (
+				<section className={styles.container}>
+					<WidgetsSkeleton numberOfWidgets={gitHubRepositoryUrls.length} />
+				</section>
+			)}
+
+			{!isLoading && repositoryData.length === 0 ? (
 					<div className={styles.empty}>
 						<span>No hay widgets configurados.</span>
 					</div>
