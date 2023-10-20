@@ -1,23 +1,24 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import { DashboardFactory } from "./sections/dashboard/DashboardFactory";
-import { Layout } from "./sections/layout/Layout";
 import { GitHubRepositoryDetailFactory } from "./sections/detail/GitHubRepositoryDetailFactory";
+import { Layout } from "./sections/layout/Layout";
 
 const router = createBrowserRouter([
 	{
-		path: '/',
+		path: "/",
 		element: <Layout />,
 		children: [
 			{
-				path: '/',
-				element: DashboardFactory.create()
+				path: "/",
+				element: DashboardFactory.create(),
 			},
 			{
-				path: '/repository/:organization/:name',
-				element: GitHubRepositoryDetailFactory.create()
-			}
-		]
-	}
+				path: "/repository/:organization/:name",
+				element: GitHubRepositoryDetailFactory.create(),
+			},
+		],
+	},
 ]);
 
 export function Router() {

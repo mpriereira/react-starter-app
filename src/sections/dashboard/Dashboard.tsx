@@ -1,6 +1,6 @@
 import { config } from "../../devdash_config";
-import styles from "./Dashboard.module.scss";
 import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
+import styles from "./Dashboard.module.scss";
 import { GitHubRepositoryWidget } from "./GitHubRepositoryWidget";
 import { useGitHubRepositories } from "./useGitHubRepositories";
 import { WidgetsSkeleton } from "./WidgetsSkeleton";
@@ -19,11 +19,11 @@ export function Dashboard({ repository }: { repository: GitHubRepositoryReposito
 			)}
 
 			{!isLoading && repositoryData.length === 0 ? (
-					<div className={styles.empty}>
-						<span>No hay widgets configurados.</span>
-					</div>
-				) : (
-					<section className={styles.container}>
+				<div className={styles.empty}>
+					<span>No hay widgets configurados.</span>
+				</div>
+			) : (
+				<section className={styles.container}>
 					{repositoryData.map((widget) => (
 						<GitHubRepositoryWidget
 							key={`${widget.id.organization}/${widget.id.name}`}

@@ -3,7 +3,9 @@ import { GitHubRepositoryPullRequest } from "../domain/GitHubRepositoryPullReque
 import { GitHubRepositoryPullRequestRepository } from "../domain/GitHubRepositoryPullRequestRepository";
 import { PullRequest } from "./GitHubApiResponse";
 
-export class GitHubApiGitHubRepositoryPullRequestRepository implements GitHubRepositoryPullRequestRepository {
+export class GitHubApiGitHubRepositoryPullRequestRepository
+	implements GitHubRepositoryPullRequestRepository
+{
 	private readonly endpoints = "https://api.github.com/repos/$organization/$name/pulls";
 
 	constructor(private readonly personalAccessToken: string) {}

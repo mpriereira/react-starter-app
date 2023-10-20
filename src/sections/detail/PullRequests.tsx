@@ -7,7 +7,7 @@ import { useGitHubRepositoryPullRequests } from "./useGitHubRepositoryPullReques
 type PullRequestsParams = {
 	repositoryId: RepositoryId;
 	repository: GitHubRepositoryPullRequestRepository;
-}
+};
 
 export function PullRequests({ repository, repositoryId }: PullRequestsParams) {
 	const { isLoading, pullRequests } = useGitHubRepositoryPullRequests(repository, repositoryId);
@@ -17,23 +17,23 @@ export function PullRequests({ repository, repositoryId }: PullRequestsParams) {
 			<h3>Pull requests</h3>
 			<table className={styles.detail__table}>
 				<thead>
-				<tr>
-					<th>Título</th>
-					<th>Fecha</th>
-				</tr>
+					<tr>
+						<th>Título</th>
+						<th>Fecha</th>
+					</tr>
 				</thead>
 				<tbody>
-				{!isLoading &&
-					pullRequests.map((pullRequest) => (
-						<tr key={pullRequest.id}>
-							<td>
-								<a target="_blank" href={pullRequest.url} rel="noreferrer">
-									{pullRequest.title}
-								</a>
-							</td>
-							<td>{pullRequest.createdAt.toLocaleDateString("es-ES")}</td>
-						</tr>
-					))}
+					{!isLoading &&
+						pullRequests.map((pullRequest) => (
+							<tr key={pullRequest.id}>
+								<td>
+									<a target="_blank" href={pullRequest.url} rel="noreferrer">
+										{pullRequest.title}
+									</a>
+								</td>
+								<td>{pullRequest.createdAt.toLocaleDateString("es-ES")}</td>
+							</tr>
+						))}
 				</tbody>
 			</table>
 			{isLoading && <Loader />}

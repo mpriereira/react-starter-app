@@ -1,7 +1,8 @@
-import styles from "./Layout.module.scss";
-import { ReactComponent as Brand } from "/src/assets/svg/brand.svg";
 import { Outlet } from "react-router-dom";
+
+import { ReactComponent as Brand } from "../../assets/svg/brand.svg";
 import { ErrorBoundary } from "./ErrorBoundary";
+import styles from "./Layout.module.scss";
 
 export function Layout() {
 	return (
@@ -13,7 +14,7 @@ export function Layout() {
 				</section>
 			</header>
 
-			<ErrorBoundary >
+			<ErrorBoundary>
 				<Outlet />
 			</ErrorBoundary>
 		</>

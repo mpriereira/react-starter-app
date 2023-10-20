@@ -63,6 +63,7 @@ function WidgetSkeleton() {
 export function WidgetsSkeleton({ numberOfWidgets }: { numberOfWidgets: number }) {
 	return (
 		<SkeletonTheme baseColor="#1A2233" highlightColor="#535966">
+			{/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
 			{[...new Array(numberOfWidgets)].map((_, i) => (
 				<WidgetSkeleton key={i} />
 			))}

@@ -1,4 +1,4 @@
-import 'react-loading-skeleton/dist/skeleton.css'
+import "react-loading-skeleton/dist/skeleton.css";
 
 import { Router } from "./Router";
 

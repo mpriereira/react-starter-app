@@ -1,7 +1,7 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import svgr from "vite-plugin-svgr";
 import EnvironmentPlugin from "vite-plugin-environment";
+import svgr from "vite-plugin-svgr";
 
 export default defineConfig((configEnv) => {
 	const isDevelopment = configEnv.mode === "development";

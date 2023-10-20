@@ -1,9 +1,8 @@
 import React from "react";
-import { Dashboard } from "./Dashboard";
-import {
-	GitHubApiGitHubRepositoryRepository
-} from "../../infrastructure/GitHubApiGitHubRepositoryRepository";
+
 import { config } from "../../devdash_config";
+import { GitHubApiGitHubRepositoryRepository } from "../../infrastructure/GitHubApiGitHubRepositoryRepository";
+import { Dashboard } from "./Dashboard";
 
 const repository = new GitHubApiGitHubRepositoryRepository(config.github_access_token);
 

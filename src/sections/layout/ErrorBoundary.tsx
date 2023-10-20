@@ -19,11 +19,13 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError
 		this.setState({ hasError: false });
 	}
 
+	// eslint-disable-next-line @typescript-eslint/member-ordering
 	render() {
 		if (this.state.hasError) {
 			return (
 				<>
 					<h2>Something went wrong.</h2>
+					{/* eslint-disable-next-line @typescript-eslint/unbound-method */}
 					<Link onClick={this.resetError} to={"/"}>
 						Return to home
 					</Link>

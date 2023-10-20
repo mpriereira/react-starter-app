@@ -1,5 +1,6 @@
-import { GitHubRepository } from "../src/domain/GitHubRepository";
 import { faker } from "@faker-js/faker";
+
+import { GitHubRepository } from "../src/domain/GitHubRepository";
 
 export class GitHubRepositoryMother {
 	static create(params?: Partial<GitHubRepository>): GitHubRepository {

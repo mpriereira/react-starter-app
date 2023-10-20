@@ -1,22 +1,24 @@
-import { useParams } from "react-router-dom";
-import { useGitHubRepository } from "./useGitHubRepository";
 import { useMemo } from "react";
-import { ReactComponent as Lock } from "/src/assets/svg/lock.svg";
-import { ReactComponent as Unlock } from "/src/assets/svg/unlock.svg";
-import styles from "./GitHubRepositoryDetail.module.scss";
-import { useInViewport } from "../layout/useInViewport";
-import { PullRequests } from "./PullRequests";
-import {
-	GitHubRepositoryPullRequestRepository
-} from "../../domain/GitHubRepositoryPullRequestRepository";
+import { useParams } from "react-router-dom";
+
+import { ReactComponent as Lock } from "../../assets/svg/lock.svg";
+import { ReactComponent as Unlock } from "../../assets/svg/unlock.svg";
+import { GitHubRepositoryPullRequestRepository } from "../../domain/GitHubRepositoryPullRequestRepository";
 import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
+import { useInViewport } from "../layout/useInViewport";
+import styles from "./GitHubRepositoryDetail.module.scss";
+import { PullRequests } from "./PullRequests";
+import { useGitHubRepository } from "./useGitHubRepository";
 
 type GitHubRepositoryDetailParams = {
 	gitHubRepositoryRepository: GitHubRepositoryRepository;
 	gitHubRepositoryPullRequestRepository: GitHubRepositoryPullRequestRepository;
-}
+};
 
-export function GitHubRepositoryDetail({ gitHubRepositoryRepository, gitHubRepositoryPullRequestRepository }: GitHubRepositoryDetailParams) {
+export function GitHubRepositoryDetail({
+	gitHubRepositoryRepository,
+	gitHubRepositoryPullRequestRepository,
+}: GitHubRepositoryDetailParams) {
 	const { organization, name } = useParams() as { organization: string; name: string };
 
 	const repositoryId = useMemo(() => ({ name, organization }), [name, organization]);
@@ -44,23 +46,23 @@ export function GitHubRepositoryDetail({ gitHubRepositoryRepository, gitHubRepos
 			<h3>Repository stats</h3>
 			<table className={styles.detail__table}>
 				<thead>
-				<tr>
-					<th>Stars</th>
-					<th>Watchers</th>
-					<th>Forks</th>
-					<th>Issues</th>
-					<th>Pull Requests</th>
-				</tr>
+					<tr>
+						<th>Stars</th>
+						<th>Watchers</th>
+						<th>Forks</th>
+						<th>Issues</th>
+						<th>Pull Requests</th>
+					</tr>
 				</thead>
 
 				<tbody>
-				<tr>
-					<td>{repositoryData.stars}</td>
-					<td>{repositoryData.watchers}</td>
-					<td>{repositoryData.forks}</td>
-					<td>{repositoryData.issues}</td>
-					<td>{repositoryData.pullRequests}</td>
-				</tr>
+					<tr>
+						<td>{repositoryData.stars}</td>
+						<td>{repositoryData.watchers}</td>
+						<td>{repositoryData.forks}</td>
+						<td>{repositoryData.issues}</td>
+						<td>{repositoryData.pullRequests}</td>
+					</tr>
 				</tbody>
 			</table>
 
@@ -74,32 +76,34 @@ export function GitHubRepositoryDetail({ gitHubRepositoryRepository, gitHubRepos
 					</p>
 					<table className={styles.detail__table}>
 						<thead>
-						<tr>
-							<th>Name</th>
-							<th>Title</th>
-							<th>Date</th>
-							<th>Status</th>
-							<th>Conclusion</th>
-						</tr>
+							<tr>
+								<th>Name</th>
+								<th>Title</th>
+								<th>Date</th>
+								<th>Status</th>
+								<th>Conclusion</th>
+							</tr>
 						</thead>
 						<tbody>
-						{repositoryData.workflowRunsStatus.map((run) => (
-							<tr key={run.id}>
-								<td>{run.name}</td>
-								<td>
-									<a href={run.url} target="_blank" rel="noreferrer">
-										{run.title}
-									</a>
-								</td>
-								<td>{run.createdAt.toLocaleDateString("es-ES")}</td>
-								<td>{run.status}</td>
-								<td>{run.conclusion}</td>
-							</tr>
-						))}
+							{repositoryData.workflowRunsStatus.map((run) => (
+								<tr key={run.id}>
+									<td>{run.name}</td>
+									<td>
+										<a href={run.url} target="_blank" rel="noreferrer">
+											{run.title}
+										</a>
+									</td>
+									<td>{run.createdAt.toLocaleDateString("es-ES")}</td>
+									<td>{run.status}</td>
+									<td>{run.conclusion}</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</>
-			) : <p>There are no workflow runs</p>}
+			) : (
+				<p>There are no workflow runs</p>
+			)}
 
 			<section ref={ref}>
 				{isInViewport && (
