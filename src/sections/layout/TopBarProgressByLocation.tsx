@@ -12,10 +12,17 @@ TopBarProgress.config({
 
 const TopBarProgressByLocation = () => {
 	const [progress, setProgress] = useState(false);
+	const [previousLocation, setPreviousLocation] = useState("");
 	const location = useLocation();
 
 	useEffect(() => {
+		setPreviousLocation(location.pathname);
 		setProgress(true);
+		const hasClickedOnALinkToTheCurrentPage = location.pathname === previousLocation;
+		if (hasClickedOnALinkToTheCurrentPage) {
+			setTimeout(() => setProgress(false));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
 
 	useEffect(() => {
