@@ -48,6 +48,9 @@
         }
       }
     },
+    "rules": {
+	  "@typescript-eslint/no-floating-promises": 0
+	},
     "overrides": [
       {
         "files": [
@@ -58,8 +61,7 @@
           "@typescript-eslint/no-unsafe-member-access": 0,
           "@typescript-eslint/no-unsafe-call": 0,
           "testing-library/prefer-screen-queries": 0,
-          "@typescript-eslint/no-unsafe-assignment": 0,
-          "@typescript-eslint/no-floating-promises": 0
+          "@typescript-eslint/no-unsafe-assignment": 0
         }
       }
     ]

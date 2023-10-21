@@ -36,6 +36,7 @@ export function AddWidgetForm({ repository }: AddWidgetFormParams) {
 						<p>Añadir repositorio</p>
 					</button>
 				) : (
+					// eslint-disable-next-line @typescript-eslint/no-misused-promises
 					<form className={styles.form} onSubmit={submitForm}>
 						<div>
 							<label htmlFor="id">Id</label>
