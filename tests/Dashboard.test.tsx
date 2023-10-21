@@ -2,19 +2,26 @@ import { screen } from "@testing-library/react";
 import { mock, MockProxy } from "jest-mock-extended";
 
 import { GitHubRepositoryRepository } from "../src/domain/GitHubRepositoryRepository";
+import { RepositoryWidgetRepository } from "../src/domain/RepositoryWidgetRepository";
 import { Dashboard } from "../src/sections/dashboard/Dashboard";
 import { GitHubRepositoryMother } from "./GitHubRepositoryMother";
 import { renderWithRouter } from "./renderWithRouter";
 
-const mockRepository: MockProxy<GitHubRepositoryRepository> = mock();
+const mockGitHubRepositoryRepository: MockProxy<GitHubRepositoryRepository> = mock();
+const mockRepositoryWidgetRepository: MockProxy<RepositoryWidgetRepository> = mock();
 
 describe("Dashboard section", () => {
 	test("show all widgets", async () => {
 		const gitHubRepository = GitHubRepositoryMother.create();
 
-		mockRepository.search.mockResolvedValue([gitHubRepository]);
+		mockGitHubRepositoryRepository.search.mockResolvedValue([gitHubRepository]);
 
-		renderWithRouter(<Dashboard repository={mockRepository} />);
+		renderWithRouter(
+			<Dashboard
+				gitHubRepositoryRepository={mockGitHubRepositoryRepository}
+				repositoryWidgetRepository={mockRepositoryWidgetRepository}
+			/>
+		);
 
 		const firstWidgetTitle = `${gitHubRepository.id.organization}/${gitHubRepository.id.name}`;
 		const firstWidgetHeader = await screen.findByRole("heading", {
@@ -25,9 +32,14 @@ describe("Dashboard section", () => {
 	});
 
 	test("show not results message when there are no widgets", async () => {
-		mockRepository.search.mockResolvedValue([]);
+		mockGitHubRepositoryRepository.search.mockResolvedValue([]);
 
-		renderWithRouter(<Dashboard repository={mockRepository} />);
+		renderWithRouter(
+			<Dashboard
+				gitHubRepositoryRepository={mockGitHubRepositoryRepository}
+				repositoryWidgetRepository={mockRepositoryWidgetRepository}
+			/>
+		);
 
 		const noResults = await screen.findByText(new RegExp("No hay widgets configurados", "i"));
 
@@ -37,9 +49,14 @@ describe("Dashboard section", () => {
 	test("show last modified date in human readable format", async () => {
 		const gitHubRepository = GitHubRepositoryMother.create({ updatedAt: new Date() });
 
-		mockRepository.search.mockResolvedValue([gitHubRepository]);
+		mockGitHubRepositoryRepository.search.mockResolvedValue([gitHubRepository]);
 
-		renderWithRouter(<Dashboard repository={mockRepository} />);
+		renderWithRouter(
+			<Dashboard
+				gitHubRepositoryRepository={mockGitHubRepositoryRepository}
+				repositoryWidgetRepository={mockRepositoryWidgetRepository}
+			/>
+		);
 
 		const modificationDate = await screen.findByText(new RegExp("today", "i"));
 
