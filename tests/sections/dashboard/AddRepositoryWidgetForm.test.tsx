@@ -1,6 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { mock, MockProxy } from "jest-mock-extended";
+import { describe, expect, test } from "vitest";
+import { mock, MockProxy } from "vitest-mock-extended";
 
 import { RepositoryWidget } from "../../../src/domain/RepositoryWidget";
 import { LocalStorageRepositoryWidgetRepository } from "../../../src/infrastructure/LocalStorageRepositoryWidgetRepository";
@@ -20,7 +21,7 @@ describe("AddWidgetForm", () => {
 
 		const url = screen.getByLabelText(/Url del repositorio/i);
 
-		expect(url).toBeInTheDocument();
+		expect(url).toBeDefined();
 	});
 
 	test("save new widget when form is submitted", async () => {
@@ -52,7 +53,7 @@ describe("AddWidgetForm", () => {
 			name: new RegExp("Añadir repositorio", "i"),
 		});
 
-		expect(addAnotherRepositoryFormButton).toBeInTheDocument();
+		expect(addAnotherRepositoryFormButton).toBeDefined();
 		expect(mockRepository.save).toHaveBeenCalledWith(newWidget);
 		mockRepository.save.mockReset();
 	});
@@ -91,7 +92,7 @@ describe("AddWidgetForm", () => {
 			description: /Repositorio duplicado/i,
 		});
 
-		expect(errorMessage).toBeInTheDocument();
+		expect(errorMessage).toBeDefined();
 		expect(mockRepository.save).not.toHaveBeenCalled();
 	});
 });

@@ -1,5 +1,6 @@
 import { screen } from "@testing-library/react";
-import { mock, MockProxy } from "jest-mock-extended";
+import { describe, expect, test } from "vitest";
+import { mock, MockProxy } from "vitest-mock-extended";
 
 import { GitHubRepositoryRepository } from "../../../src/domain/GitHubRepositoryRepository";
 import { RepositoryWidgetRepository } from "../../../src/domain/RepositoryWidgetRepository";
@@ -28,7 +29,7 @@ describe("Dashboard section", () => {
 			name: new RegExp(firstWidgetTitle, "i"),
 		});
 
-		expect(firstWidgetHeader).toBeInTheDocument();
+		expect(firstWidgetHeader).toBeDefined();
 	});
 
 	test("show not results message when there are no widgets", async () => {
@@ -43,7 +44,7 @@ describe("Dashboard section", () => {
 
 		const noResults = await screen.findByText(new RegExp("No hay widgets configurados", "i"));
 
-		expect(noResults).toBeInTheDocument();
+		expect(noResults).toBeDefined();
 	});
 
 	test("show last modified date in human readable format", async () => {
@@ -60,6 +61,6 @@ describe("Dashboard section", () => {
 
 		const modificationDate = await screen.findByText(new RegExp("today", "i"));
 
-		expect(modificationDate).toBeInTheDocument();
+		expect(modificationDate).toBeDefined();
 	});
 });
