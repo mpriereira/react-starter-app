@@ -63,7 +63,16 @@
           "testing-library/prefer-screen-queries": 0,
           "@typescript-eslint/no-unsafe-assignment": 0
         }
-      }
+      },
+	  {
+	    "files": [
+		  "**/tests/sections/**/*.test.tsx"
+		],
+	    "rules": {
+		  "testing-library/no-unnecessary-act": 0,
+		  "@typescript-eslint/unbound-method": 0
+		}
+	  }
     ]
   },
   "browserslist": {

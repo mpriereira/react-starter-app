@@ -5,11 +5,11 @@ import { RepositoryWidgetRepository } from "../../domain/RepositoryWidgetReposit
 import styles from "./AddWidgetForm.module.scss";
 import { useAddRepositoryWidget } from "./useAddRepositoryWidget";
 
-type FormEvent<T extends { [key: string]: string }> = React.FormEvent<HTMLFormElement> & {
-	target: { [key in keyof T]: { value: T[key] } };
+type FormEvent<T> = React.FormEvent<HTMLFormElement> & {
+	target: { elements: { [key in keyof T]: { value: T[key] } } };
 };
 
-type FormData = { id: string; url: string };
+type FormData = { id: string; repositoryUrl: string };
 
 type AddWidgetFormParams = {
 	repository: RepositoryWidgetRepository;
@@ -17,20 +17,21 @@ type AddWidgetFormParams = {
 
 export function AddWidgetForm({ repository }: AddWidgetFormParams) {
 	const [isFormActive, setIsFormActive] = useState(false);
+	const [hasAlreadyExistsError, setHasAlreadyExistsError] = useState(false);
 	const { save } = useAddRepositoryWidget(repository);
 
 	const submitForm = async (ev: FormEvent<FormData>) => {
 		ev.preventDefault();
-		const { id, url } = ev.target;
-		await save({ id: id.value, repositoryUrl: url.value });
-
+		const { id, repositoryUrl } = ev.target.elements;
+		const error = await save({ id: id.value, repositoryUrl: repositoryUrl.value });
+		setHasAlreadyExistsError(!!error);
 		setIsFormActive(false);
 	};
 
 	return (
 		<article className={styles.add_widget}>
 			<div className={styles.container}>
-				{!isFormActive ? (
+				{!isFormActive && !hasAlreadyExistsError ? (
 					<button onClick={() => setIsFormActive(true)} className={styles.add_button}>
 						<Add />
 						<p>Añadir repositorio</p>
@@ -40,12 +41,18 @@ export function AddWidgetForm({ repository }: AddWidgetFormParams) {
 					<form className={styles.form} onSubmit={submitForm}>
 						<div>
 							<label htmlFor="id">Id</label>
-							<input type="text" id="id" />
+							<input type="text" name="id" id="id" />
 						</div>
 						<div>
-							<label htmlFor="url">Url del repositorio</label>
-							<input type="text" id="url" />
+							<label htmlFor="repositoryUrl">Url del repositorio</label>
+							<input type="text" name="repositoryUrl" id="repositoryUrl" />
 						</div>
+
+						{hasAlreadyExistsError && (
+							<p role="alert" aria-describedby="duplicated-error">
+								<span id="duplicated-error">Repositorio duplicado</span>
+							</p>
+						)}
 
 						<div>
 							<input type="submit" value="Añadir" />
