@@ -47,6 +47,11 @@
       background-color: #3cff64;
       border: 1px solid transparent;
       border-radius: 2rem;
+
+      &:disabled {
+        background-color: #89f19e;
+        cursor: not-allowed;
+      }
     }
   }
 }

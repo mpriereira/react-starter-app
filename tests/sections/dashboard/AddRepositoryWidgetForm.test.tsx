@@ -101,4 +101,38 @@ describe("AddWidgetForm", () => {
 		expect(errorMessage).toBeDefined();
 		expect(mockRepository.save).not.toHaveBeenCalled();
 	});
+
+	test("do not allow to add widget with invalid URL", async () => {
+		const user = userEvent.setup();
+
+		const newWidget: RepositoryWidget = {
+			id: "newWidgetId",
+			repositoryUrl: "invalid-url",
+		};
+		mockRepository.search.mockResolvedValue([]);
+
+		render(<AddWidgetForm repository={mockRepository} />);
+
+		const button = screen.getByRole("button", {
+			name: new RegExp("Añadir repositorio", "i"),
+		});
+
+		await user.click(button);
+
+		const id = screen.getByLabelText(/Id/i);
+		await user.type(id, newWidget.id);
+
+		const url = screen.getByLabelText(/Url del repositorio/i);
+		await user.type(url, newWidget.repositoryUrl);
+
+		const submitButton = screen.getByRole<HTMLInputElement>("button", {
+			name: /Añadir/i,
+		});
+
+		expect(submitButton.disabled).toBeTruthy();
+
+		await user.click(submitButton);
+
+		expect(mockRepository.save).not.toHaveBeenCalled();
+	});
 });

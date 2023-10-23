@@ -17,8 +17,25 @@ type AddWidgetFormParams = {
 
 export function AddWidgetForm({ repository }: AddWidgetFormParams) {
 	const [isFormActive, setIsFormActive] = useState(false);
+	const [formState, setFormState] = useState<FormData>({
+		id: "",
+		repositoryUrl: "",
+	});
 	const [hasAlreadyExistsError, setHasAlreadyExistsError] = useState(false);
 	const { save } = useAddRepositoryWidget(repository);
+
+	const urlRegex =
+		/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/;
+
+	const isValidForm: boolean =
+		!!formState.id && !!formState.repositoryUrl && urlRegex.test(formState.repositoryUrl);
+
+	const handleFormChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+		setFormState((prevState) => ({
+			...prevState,
+			[ev.target.name]: ev.target.value,
+		}));
+	};
 
 	const submitForm = async (ev: FormEvent<FormData>) => {
 		ev.preventDefault();
@@ -41,11 +58,23 @@ export function AddWidgetForm({ repository }: AddWidgetFormParams) {
 					<form className={styles.form} onSubmit={submitForm}>
 						<div>
 							<label htmlFor="id">Id</label>
-							<input type="text" name="id" id="id" />
+							<input
+								type="text"
+								name="id"
+								id="id"
+								value={formState.id}
+								onChange={handleFormChange}
+							/>
 						</div>
 						<div>
 							<label htmlFor="repositoryUrl">Url del repositorio</label>
-							<input type="text" name="repositoryUrl" id="repositoryUrl" />
+							<input
+								type="text"
+								name="repositoryUrl"
+								id="repositoryUrl"
+								value={formState.repositoryUrl}
+								onChange={handleFormChange}
+							/>
 						</div>
 
 						{hasAlreadyExistsError && (
@@ -55,7 +84,7 @@ export function AddWidgetForm({ repository }: AddWidgetFormParams) {
 						)}
 
 						<div>
-							<input type="submit" value="Añadir" />
+							<input type="submit" value="Añadir" disabled={!isValidForm} />
 						</div>
 					</form>
 				)}
