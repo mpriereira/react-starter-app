@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, test } from "vitest";
 import { mock, MockProxy } from "vitest-mock-extended";
@@ -11,13 +11,15 @@ const mockRepository: MockProxy<LocalStorageRepositoryWidgetRepository> = mock()
 
 describe("AddWidgetForm", () => {
 	test("show widget form when add button is clicked", async () => {
+		const user = userEvent.setup();
+
 		render(<AddWidgetForm repository={mockRepository} />);
 
-		const button = await screen.findByRole("button", {
+		const button = screen.getByRole("button", {
 			name: new RegExp("Añadir", "i"),
 		});
 
-		act(() => userEvent.click(button));
+		await user.click(button);
 
 		const url = screen.getByLabelText(/Url del repositorio/i);
 
@@ -25,6 +27,8 @@ describe("AddWidgetForm", () => {
 	});
 
 	test("save new widget when form is submitted", async () => {
+		const user = userEvent.setup();
+
 		const newWidget: RepositoryWidget = {
 			id: "newWidgetId",
 			repositoryUrl: "https://github.com/CodelyTV/DevDash",
@@ -33,23 +37,23 @@ describe("AddWidgetForm", () => {
 
 		render(<AddWidgetForm repository={mockRepository} />);
 
-		const button = await screen.findByRole("button", {
+		const button = screen.getByRole("button", {
 			name: new RegExp("Añadir repositorio", "i"),
 		});
-		act(() => userEvent.click(button));
+		await user.click(button);
 
 		const id = screen.getByLabelText(/Id/i);
-		userEvent.type(id, newWidget.id);
+		await user.type(id, newWidget.id);
 
 		const url = screen.getByLabelText(/Url del repositorio/i);
-		userEvent.type(url, newWidget.repositoryUrl);
+		await user.type(url, newWidget.repositoryUrl);
 
-		const submitButton = await screen.findByRole("button", {
+		const submitButton = screen.getByRole("button", {
 			name: /Añadir/i,
 		});
-		userEvent.click(submitButton);
+		await user.click(submitButton);
 
-		const addAnotherRepositoryFormButton = await screen.findByRole("button", {
+		const addAnotherRepositoryFormButton = screen.getByRole("button", {
 			name: new RegExp("Añadir repositorio", "i"),
 		});
 
@@ -59,6 +63,8 @@ describe("AddWidgetForm", () => {
 	});
 
 	test("show error when repository already exists in Dashboard", async () => {
+		const user = userEvent.setup();
+
 		const existingWidget: RepositoryWidget = {
 			id: "existingWidgetId",
 			repositoryUrl: "https://github.com/CodelyTV/DevDash",
@@ -72,23 +78,23 @@ describe("AddWidgetForm", () => {
 
 		render(<AddWidgetForm repository={mockRepository} />);
 
-		const button = await screen.findByRole("button", {
+		const button = screen.getByRole("button", {
 			name: new RegExp("Añadir repositorio", "i"),
 		});
-		act(() => userEvent.click(button));
+		await user.click(button);
 
 		const id = screen.getByLabelText(/Id/i);
-		userEvent.type(id, newWidgetWithSameUrl.id);
+		await user.type(id, newWidgetWithSameUrl.id);
 
 		const url = screen.getByLabelText(/Url del repositorio/i);
-		userEvent.type(url, newWidgetWithSameUrl.repositoryUrl);
+		await user.type(url, newWidgetWithSameUrl.repositoryUrl);
 
-		const submitButton = await screen.findByRole("button", {
+		const submitButton = screen.getByRole("button", {
 			name: /Añadir/i,
 		});
-		act(() => userEvent.click(submitButton));
+		await user.click(submitButton);
 
-		const errorMessage = await screen.findByRole("alert", {
+		const errorMessage = screen.getByRole("alert", {
 			description: /Repositorio duplicado/i,
 		});
 
