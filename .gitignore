@@ -13,3 +13,6 @@ dist
 
 # IDE files
 /.idea/
+
+#Tests coverage
+coverage/

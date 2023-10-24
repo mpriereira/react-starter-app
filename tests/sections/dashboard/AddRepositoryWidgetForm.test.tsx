@@ -129,10 +129,9 @@ describe("AddWidgetForm", () => {
 			name: /Añadir/i,
 		});
 
-		expect(submitButton.disabled).toBeTruthy();
-
 		await user.click(submitButton);
 
+		expect(submitButton.disabled).toBe(true);
 		expect(mockRepository.save).not.toHaveBeenCalled();
 	});
 });
