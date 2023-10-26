@@ -1,8 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vitest } from "vitest";
 import { mock, MockProxy } from "vitest-mock-extended";
 
+import { DomainEvents } from "../../../src/domain/DomainEvents";
 import { RepositoryWidget } from "../../../src/domain/RepositoryWidget";
 import { LocalStorageRepositoryWidgetRepository } from "../../../src/infrastructure/LocalStorageRepositoryWidgetRepository";
 import { AddWidgetForm } from "../../../src/sections/dashboard/AddWidgetForm";
@@ -28,6 +29,7 @@ describe("AddWidgetForm", () => {
 
 	test("save new widget when form is submitted", async () => {
 		const user = userEvent.setup();
+		const dispatchEventSpy = vitest.spyOn(document, "dispatchEvent");
 
 		const newWidget: RepositoryWidget = {
 			id: "newWidgetId",
@@ -59,6 +61,10 @@ describe("AddWidgetForm", () => {
 
 		expect(addAnotherRepositoryFormButton).toBeDefined();
 		expect(mockRepository.save).toHaveBeenCalledWith(newWidget);
+
+		expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(Event));
+		expect(dispatchEventSpy.mock.calls[0][0].type).toBe(DomainEvents.repositoryWidgetAdded);
+
 		mockRepository.save.mockReset();
 	});
 

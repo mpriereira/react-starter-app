@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { DomainEvents } from "../../domain/DomainEvents";
 import { GitHubRepository } from "../../domain/GitHubRepository";
 import { GitHubRepositoryRepository } from "../../domain/GitHubRepositoryRepository";
 
@@ -15,7 +16,7 @@ export function useGitHubRepositories(
 		repository.search(repositoryUrls).then((response) => {
 			setRepositoryData(response);
 			setIsLoading(false);
-			document.dispatchEvent(new CustomEvent("pageLoaded"));
+			document.dispatchEvent(new CustomEvent(DomainEvents.pageLoaded));
 		});
 	}, [repository, repositoryUrls]);
 

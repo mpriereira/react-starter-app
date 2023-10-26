@@ -20,6 +20,7 @@ export class GitHubRepositoryMother {
 			pullRequests: faker.number.int(),
 			updatedAt: faker.date.anytime(),
 			watchers: faker.number.int(),
+			workflowRunsStatus: [],
 			...params,
 		};
 
