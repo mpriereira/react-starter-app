@@ -5,3 +5,6 @@ end_of_line = lf
 insert_final_newline = true
 max_line_length = 100
 indent_style = tab
+
+[*.scss]
+indent_size = 2

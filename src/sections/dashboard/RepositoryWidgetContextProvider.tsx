@@ -31,9 +31,11 @@ export function RepositoryWidgetContextProvider({
 		};
 
 		document.addEventListener(DomainEvents.repositoryWidgetAdded, reloadRepositoryWidgets);
+		document.addEventListener(DomainEvents.repositoryWidgetRemoved, reloadRepositoryWidgets);
 
 		return () => {
 			document.removeEventListener(DomainEvents.repositoryWidgetAdded, reloadRepositoryWidgets);
+			document.removeEventListener(DomainEvents.repositoryWidgetRemoved, reloadRepositoryWidgets);
 		};
 	}, [repository]);
 

@@ -43,6 +43,10 @@ export function AddWidgetForm({ repository }: AddWidgetFormParams) {
 		const error = await save({ id: id.value, repositoryUrl: repositoryUrl.value });
 		setHasAlreadyExistsError(!!error);
 		setIsFormActive(false);
+		setFormState({
+			id: "",
+			repositoryUrl: "",
+		});
 	};
 
 	return (

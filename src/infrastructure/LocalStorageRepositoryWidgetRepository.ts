@@ -12,6 +12,15 @@ export class LocalStorageRepositoryWidgetRepository implements RepositoryWidgetR
 		);
 	}
 
+	async delete(id: string): Promise<void> {
+		const currentRepositoryWidgets = await this.search();
+
+		localStorage.setItem(
+			this.localStorageKey,
+			JSON.stringify(currentRepositoryWidgets.filter((w) => w.id !== id))
+		);
+	}
+
 	async search(): Promise<RepositoryWidget[]> {
 		const data = localStorage.getItem(this.localStorageKey);
 

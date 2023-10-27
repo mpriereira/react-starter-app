@@ -6,6 +6,7 @@ import { RepositoryWidgetRepository } from "../../domain/RepositoryWidgetReposit
 import { AddWidgetForm } from "./AddWidgetForm";
 import styles from "./Dashboard.module.scss";
 import { GitHubRepositoryWidget } from "./GitHubRepositoryWidget";
+import { useRemoveRepositoryWidget } from "./useDeleteRepositoryWidget";
 import { useGitHubRepositories } from "./useGitHubRepositories";
 import { WidgetsSkeleton } from "./WidgetsSkeleton";
 
@@ -29,16 +30,27 @@ export function Dashboard({
 		gitHubRepositoryUrls
 	);
 
+	const { remove } = useRemoveRepositoryWidget(repositoryWidgetRepository);
+
+	const handleWidgetRepositoryDelete = async (id: string) => {
+		const error = await remove(id);
+		if (error) {
+			alert("No se ha podido eliminar el widget");
+		}
+	};
+
 	return (
 		<>
 			<section className={styles.container}>
 				{isLoading ? (
 					<WidgetsSkeleton numberOfWidgets={gitHubRepositoryUrls.length} />
 				) : (
-					repositoryData.map((repository) => (
+					repositoryData.map((repository, index) => (
 						<GitHubRepositoryWidget
 							key={`${repository.id.organization}/${repository.id.name}`}
 							repository={repository}
+							widgetId={repositoryWidgets[index]?.id}
+							onDelete={handleWidgetRepositoryDelete}
 						/>
 					))
 				)}

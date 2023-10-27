@@ -13,6 +13,12 @@
     background-color: #3cff64;
   }
 
+  &__icons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
   &__status {
     display: flex;
     justify-content: space-between;

@@ -12,6 +12,12 @@ import { ReactComponent as Watchers } from "../../assets/svg/watchers.svg";
 import { GitHubRepository } from "../../domain/GitHubRepository";
 import styles from "./GitHubRepositoryWidget.module.scss";
 
+type GitHubRepositoryWidgetParams = {
+	repository: GitHubRepository;
+	widgetId: string;
+	onDelete: (id: string) => Promise<void>;
+};
+
 const isoToReadableDate = (lastUpdateDate: Date): string => {
 	const currentDate = new Date();
 	const diffDays = Math.round(
@@ -29,7 +35,15 @@ const isoToReadableDate = (lastUpdateDate: Date): string => {
 	return `${diffDays} days ago`;
 };
 
-export function GitHubRepositoryWidget({ repository }: { repository: GitHubRepository }) {
+export function GitHubRepositoryWidget({
+	repository,
+	widgetId,
+	onDelete,
+}: GitHubRepositoryWidgetParams) {
+	const handleDelete = () => {
+		onDelete(widgetId).then();
+	};
+
 	return (
 		<article className={styles.widget} key={repository.id.name}>
 			<header className={styles.widget__header}>
@@ -38,7 +52,10 @@ export function GitHubRepositoryWidget({ repository }: { repository: GitHubRepos
 						{repository.id.organization}/{repository.id.name}
 					</Link>
 				</h2>
-				{repository.private ? <Lock /> : <Unlock />}
+				<div className={styles.widget__icons}>
+					<Error onClick={handleDelete} />
+					{repository.private ? <Lock /> : <Unlock />}
+				</div>
 			</header>
 			<div className={styles.widget__body}>
 				<div className={styles.widget__status}>
