@@ -25,3 +25,18 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 import "@testing-library/cypress/add-commands";
+
+import { RepositoryWidget } from "../../../src/domain/RepositoryWidget";
+
+Cypress.Commands.add("addWidgetToDashboard", (widget: RepositoryWidget) => {
+	cy.findByRole("button", {
+		name: new RegExp("Añadir", "i"),
+	}).click();
+
+	cy.findByLabelText(/Id/i).type(widget.id);
+	cy.findByLabelText(/Url del repositorio/i).type(widget.repositoryUrl);
+
+	cy.findByRole("button", {
+		name: /Añadir/i,
+	}).click();
+});

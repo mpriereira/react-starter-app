@@ -27,7 +27,8 @@
 	"overrides": [
 		{
 			"files": [
-				"**/tests/e2e/**/*.spec.ts"
+				"**/tests/e2e/**/*.spec.ts",
+				"**/tests/e2e/support/**/*.ts"
 			],
 			"rules": {
 				"testing-library/await-async-query": 0,
