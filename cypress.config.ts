@@ -11,4 +11,7 @@ export default defineConfig({
 		viewportHeight: 1080,
 		supportFile: "tests/e2e/support/e2e.ts",
 	},
+	env: {
+		api_token: "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",
+	},
 });

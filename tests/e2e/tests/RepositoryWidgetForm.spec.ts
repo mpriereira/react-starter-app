@@ -1,5 +1,9 @@
 import { RepositoryWidgetMother } from "../../RepositoryWidgetMother";
 
+before(() => {
+	localStorage.setItem("github_access_token", Cypress.env("api_token") as string);
+});
+
 describe("Repository Widget Form", () => {
 	it("Add new repository with id and url", () => {
 		cy.visit("/");

@@ -1,21 +1,33 @@
+:root {
+  --header-height: 6.25rem;
+}
+
 .header {
+  height: var(--header-height);
   background-color: #1a2233;
 
   &__container {
     display: flex;
     gap: 2rem;
+    justify-content: space-between;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem;
+
+    .brand__container {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    & a {
+      text-decoration: none;
+    }
   }
 
-  & a {
-    text-decoration: none;
+  .app__brand {
+    color: #3cff64;
+    font-style: italic;
   }
-}
-
-.app__brand {
-  color: #3cff64;
-  font-style: italic;
 }

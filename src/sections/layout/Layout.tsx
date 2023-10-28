@@ -11,13 +11,18 @@ export function Layout() {
 			<TopBarProgressByLocation />
 			<header className={styles.header}>
 				<section className={styles.header__container}>
-					<Brand />
-					<Link to="/">
-						<h1 className={styles.app__brand}>DevDash_</h1>
+					<div className={styles.brand__container}>
+						<Brand />
+						<Link to="/">
+							<h1 className={styles.app__brand}>DevDash_</h1>
+						</Link>
+					</div>
+
+					<Link to="/config">
+						<span>⚙️</span>
 					</Link>
 				</section>
 			</header>
-
 			<ErrorBoundary>
 				<Outlet />
 			</ErrorBoundary>

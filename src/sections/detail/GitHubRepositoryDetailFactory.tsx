@@ -1,15 +1,18 @@
 import React from "react";
 
-import { config } from "../../devdash_config";
 import { GitHubApiGitHubRepositoryPullRequestRepository } from "../../infrastructure/GitHubApiGitHubRepositoryPullRequestRepository";
 import { GitHubApiGitHubRepositoryRepository } from "../../infrastructure/GitHubApiGitHubRepositoryRepository";
+import { LocalStorageGitHubAccessTokenRepository } from "../../infrastructure/LocalStorageGitHubAccessTokenRepository";
+import { GitHubAccessTokenSearcher } from "../config/GitHubAccessTokenSearcher";
 import { GitHubRepositoryDetail } from "./GitHubRepositoryDetail";
 
+const ghAccessTokenRepository = new LocalStorageGitHubAccessTokenRepository();
+const ghAccessTokenSearcher = new GitHubAccessTokenSearcher(ghAccessTokenRepository);
 const gitHubRepositoryRepository = new GitHubApiGitHubRepositoryRepository(
-	config.github_access_token
+	ghAccessTokenSearcher.search()
 );
 const gitHubRepositoryPullRequestRepository = new GitHubApiGitHubRepositoryPullRequestRepository(
-	config.github_access_token
+	ghAccessTokenSearcher.search()
 );
 
 export class GitHubRepositoryDetailFactory {
